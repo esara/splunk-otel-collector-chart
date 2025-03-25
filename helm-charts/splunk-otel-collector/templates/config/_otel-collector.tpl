@@ -174,6 +174,12 @@ exporters:
   {{- include "splunk-otel-collector.splunkPlatformTracesExporter" . | nindent 2 }}
   {{- end }}
 
+  otlp/causely:
+    endpoint: mediator.causely:4317
+    compression: none
+    tls:
+      insecure: true
+
 {{- if and
   (or (eq (include "splunk-otel-collector.logsEnabled" .) "true") (eq (include "splunk-otel-collector.profilingEnabled" .) "true") (.Values.splunkObservability.secureAppEnabled))
   (eq (include "splunk-otel-collector.splunkO11yEnabled" .) "true")
@@ -246,6 +252,7 @@ service:
         {{- if (eq (include "splunk-otel-collector.platformTracesEnabled" .) "true") }}
         - splunk_hec/platform_traces
         {{- end }}
+        - otlp/causely
     {{- end }}
 
     {{- if (eq (include "splunk-otel-collector.metricsEnabled" .) "true") }}
@@ -284,6 +291,7 @@ service:
         {{- if (eq (include "splunk-otel-collector.platformMetricsEnabled" .) "true") }}
         - splunk_hec/platform_metrics
         {{- end }}
+        - otlp/causely
     {{- end }}
 
     {{- if (eq (include "splunk-otel-collector.splunkO11yEnabled" .) "true") }}
